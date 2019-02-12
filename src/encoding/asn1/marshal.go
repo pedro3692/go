@@ -517,8 +517,8 @@ func makeBody(value reflect.Value, params fieldParameters) (e encoder, err error
 		switch params.stringType {
 		case TagIA5String:
 			return makeIA5String(v.String())
-		case TagPrintableString:
-			return makePrintableString(v.String())
+		//case TagPrintableString:
+		//	return makePrintableString(v.String())
 		case TagNumericString:
 			return makeNumericString(v.String())
 		default:
