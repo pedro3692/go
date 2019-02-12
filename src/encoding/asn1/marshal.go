@@ -5,7 +5,6 @@
 package asn1
 
 import (
-	"errors"
 	"fmt"
 	"math/big"
 	"reflect"
@@ -589,19 +588,22 @@ func makeField(v reflect.Value, params fieldParameters) (e encoder, err error) {
 
 	switch tag {
 	case TagPrintableString:
-		if params.stringType == 0 {
-			// This is a string without an explicit string type. We'll use
-			// a PrintableString if the character set in the string is
-			// sufficiently limited, otherwise we'll use a UTF8String.
-			for _, r := range v.String() {
-				if r >= utf8.RuneSelf || !isPrintable(byte(r), rejectAsterisk, rejectAmpersand) {
-					if !utf8.ValidString(v.String()) {
-						return nil, errors.New("asn1: string not valid UTF-8")
-					}
-					tag = TagUTF8String
-					break
-				}
-			}
+		// if params.stringType == 0 {
+		// 	// This is a string without an explicit string type. We'll use
+		// 	// a PrintableString if the character set in the string is
+		// 	// sufficiently limited, otherwise we'll use a UTF8String.
+		// 	for _, r := range v.String() {
+		// 		if r >= utf8.RuneSelf || !isPrintable(byte(r), rejectAsterisk, rejectAmpersand) {
+		// 			if !utf8.ValidString(v.String()) {
+		// 				return nil, errors.New("asn1: string not valid UTF-8")
+		// 			}
+		if utf8.ValidString(v.String()) {
+			tag = TagUTF8String
+
+			break
+
+			// 	}
+			// }
 		} else {
 			tag = params.stringType
 		}
